@@ -1,0 +1,15 @@
+jobs:
+  all: Toutes les offres d’emploi
+  discover: Découvrir l’offre d’emploi
+  latest: Dernières offres d’emploi
+  latest_person: Dernières offres d’emploi de {{ .Person }}
+  list: Liste des offres d’emploi de cette personne
+  list_person: Liste des offres d’emploi de {{ .Person }}
+  more: Découvrir plus d’offres d’emploi
+  more_person: Découvrir plus d’offres d’emploi de {{ .Person }}
+  title:
+    one: Offre d’emploi
+    other: Offres d’emploi
+  title_person: 
+    one: Offre d’emploi de {{ .Person }}
+    other: Offres d’emploi de {{ .Person }}

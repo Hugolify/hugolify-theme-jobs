@@ -1,0 +1,15 @@
+jobs:
+  all: All jobs
+  discover: Discover job
+  latest: Latest jobs
+  latest_person: Latest jobs of {{ .Person }}
+  list: List of jobs by this person
+  list_person: '{{ .Person }}’s jobs'
+  more: Discover more jobs
+  more_person: More jobs by {{ .Person }}
+  title:
+    one: Job
+    other: Jobs
+  title_person:
+    one: Job of {{ .Person }}
+    other: Jobs of {{ .Person }}
