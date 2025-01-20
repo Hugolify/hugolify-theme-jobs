@@ -17,7 +17,6 @@ params:
   jobs:
     thumbnail:
       desktop: '414x177'
-      desktop_large: '526x226'
       mobile: '300x129'
       scrollsnap: '240x103'
     medium:

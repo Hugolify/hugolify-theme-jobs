@@ -2,9 +2,12 @@
   {
     "@context": "https://schema.org",
     "@type": "JobPosting",
-    "title": {{ .Title | plainify | safeHTML }},
+    "title": {{ partial "func/PrepareData" .Title }},
+    {{- with .Date }}
+      "datePublished": {{ . }},
+    {{ end -}}
     {{ with .Description }}
-      "description": {{ partial "func/TruncateContent" (dict "content" .) }},
+      "description": {{ partial "func/PrepareData" . }},
     {{ end }}
     "url": {{ .Permalink }}
   }
