@@ -1,0 +1,9 @@
+{{ define "hero"}}
+  {{- partial "jobs/hero" . -}}
+{{ end }}
+
+{{ define "main" }}
+  {{ partial "jobs/schema" . }}
+  {{ partial "blocks/list" . }}
+  {{ partial "jobs/container" . }}
+{{ end }}

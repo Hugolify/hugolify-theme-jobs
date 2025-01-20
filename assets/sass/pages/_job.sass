@@ -1,0 +1,22 @@
+.page-jobs
+    .hero-content
+        @extend .col-md-8
+        @extend .col-xl-7
+
+    .container + section
+        @include margin-top($global-spacing-double)
+
+    @include media-breakpoint-up(md)
+        .grid >
+            .content,
+            .toc
+                grid-row: 2/4
+            .sidebar + .toc
+                grid-row: 3/6
+                    
+    @include media-breakpoint-down(md)
+        .grid >
+            .sidebar
+                margin-bottom: $spacer
+                margin-top: 0
+                order: 2

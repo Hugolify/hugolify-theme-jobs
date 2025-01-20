@@ -1,0 +1,32 @@
+module:
+  mounts:
+    - source: archetypes
+      target: archetypes
+    - source: assets
+      target: assets
+    - source: i18n
+      target: i18n
+    - source: layouts
+      target: layouts
+
+params:
+  admin:
+    collections:
+      jobs:
+        enable: true
+  jobs:
+    thumbnail:
+      desktop: '414x177'
+      desktop_large: '526x226'
+      mobile: '300x129'
+      scrollsnap: '240x103'
+    medium:
+      desktop: '636x445'
+      mobile: '300x210'
+      scrollsnap: '240x168'
+    image:
+      desktop: '300x'
+
+# Default
+permalinks:
+  jobs: /jobs/:slug/

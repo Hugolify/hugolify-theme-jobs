@@ -1,0 +1,8 @@
+---
+isIndex: false
+draft: true
+date: {{ .Date }}
+title: "{{ replace .Name "-" " " | title }}"
+description:
+image:
+---
