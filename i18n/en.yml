@@ -1,6 +1,9 @@
 jobs:
   all: All jobs
+  apply: Apply
   discover: Discover job
+  form:
+    submit: Apply
   latest: Latest jobs
   latest_person: Latest jobs of {{ .Person }}
   list: List of jobs by this person

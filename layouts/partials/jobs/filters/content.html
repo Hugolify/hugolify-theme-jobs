@@ -1,0 +1,14 @@
+<div class="content">
+  {{- $jobs_places := "jobs/filters/jobs_places.html" -}}
+  {{- if templates.Exists ( printf "partials/%s" $jobs_places ) }}
+    {{ partial $jobs_places . }}
+  {{ end -}}
+  {{- $jobs_types := "jobs/filters/jobs_types.html" -}}
+  {{- if templates.Exists ( printf "partials/%s" $jobs_types ) }}
+    {{ partial $jobs_types . }}
+  {{ end -}}
+  {{- $jobs_tags := "jobs/filters/jobs_tags.html" -}}
+  {{- if templates.Exists ( printf "partials/%s" $jobs_tags ) }}
+    {{ partial $jobs_tags . }}
+  {{ end -}}
+</div>

@@ -1,5 +1,9 @@
 <a href="{{ .Permalink }}" itemprop="url" class="content">
-  {{ partial "jobs/item/title" . }}
-  {{ partial "jobs/item/description" . }}
-  {{ partial "jobs/item/more" . }}
+  {{ partial "commons/item/reference.html" . }}
+  {{- $jobs_places := "jobs/item/jobs_places.html" -}}
+  {{- if templates.Exists ( printf "partials/%s" $jobs_places ) }}
+    {{ partial $jobs_places . }}
+  {{ end -}}
+  {{ partial "jobs/item/title.html" . }}
+  {{ partial "jobs/item/more.html" . }}
 </a>

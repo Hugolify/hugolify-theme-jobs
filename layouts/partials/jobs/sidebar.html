@@ -1,3 +1,7 @@
-<div class="sidebar"{{ partial "func/SetAnim" (dict "element" "sidebar") }}>
-  {{ partial "jobs/featured-image" . }}
+<div class="sidebar" {{- partial "func/SetAnim" (dict "element" "sidebar") }}>
+  {{ partial "commons/key-features" . }}
+  {{- $jobs_tags := "jobs/jobs_tags.html" -}}
+  {{- if templates.Exists ( printf "partials/%s" $jobs_tags ) }}
+    {{ partial $jobs_tags . }}
+  {{ end -}}
 </div>

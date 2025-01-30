@@ -2,21 +2,53 @@
     .hero-content
         @extend .col-md-8
         @extend .col-xl-7
+    .metas
+        --bs-alert-border-color: #{$border-color}
+        --bs-alert-bg: #{$light}
+        @extend .alert
+        @if variable-exists(icons-map)
+            &-places span::before
+                @include icon("geo-alt")
+                font-size: 1rem
+                margin-right: .25rem
+                vertical-align: -0.15em
+    .job-form
+        @include margin-top($global-spacing)
 
     .container + section
         @include margin-top($global-spacing-double)
 
     @include media-breakpoint-up(md)
+        .grid
+            grid-template-rows: auto auto auto 1fr
         .grid >
-            .content,
+            .metas
+                grid-column: 1/9
+                grid-row: 2
+                margin-bottom: $global-spacing
+            .content
+                grid-row: 3 / 5
+            .sidebar
+                grid-row: 2 / span 2
             .toc
-                grid-row: 2/4
-            .sidebar + .toc
-                grid-row: 3/6
+                grid-row: auto
+            .job-form
+                grid-column: 1/9
+                grid-row: auto
                     
     @include media-breakpoint-down(md)
         .grid >
-            .sidebar
-                margin-bottom: $spacer
-                margin-top: 0
+            .metas
                 order: 2
+            .content
+                order: 4
+            .sidebar
+                order: 5
+            .toc
+                order: 3
+                margin-bottom: $spacer
+            .job-form
+                order: 6
+            nav
+                order: 7
+            

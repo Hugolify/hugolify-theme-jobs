@@ -1,0 +1,27 @@
+<section class="job-form">
+  <h2 id="apply">{{ i18n "jobs.apply" }}</h2>
+  {{- $item_firstname := dict "label" (i18n "form.firstname") "type" "text" "autocomplet" "firstname" "required" true -}}
+  {{- $item_lastname := dict "label" (i18n "form.lastname") "type" "text" "autocomplet" "lastname" "required" true -}}
+  {{- $item_phone := dict "label" (i18n "form.tel") "type" "tel" "autocomplet" "lastname" "required" true -}}
+  {{- $item_email := dict "label" (i18n "form.email") "type" "email" "autocomplet" "email" "required" true -}}
+  {{- $item_message := dict "label" (i18n "form.message") "type" "textarea" "full" true "required" true -}}
+  {{- $items := slice $item_firstname $item_lastname $item_phone $item_email $item_message -}}
+  {{- $form := (dict 
+    "index" .Type 
+    "items" $items
+    "submit" (i18n "jobs.form.submit")
+    ) -}}
+  {{- partial "commons/form.html" $form -}}
+  {{ if .Page.TableOfContents }}
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var toc = document.querySelector(".toc ol");
+        if (toc) {
+          var newItem = document.createElement("li");
+          newItem.innerHTML = '<a href="#apply">{{ i18n "jobs.apply" }}</a>';
+          toc.appendChild(newItem);
+        }
+      });
+    </script>
+  {{ end }}
+</section>

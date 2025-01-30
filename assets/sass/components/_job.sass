@@ -12,6 +12,19 @@
         --bs-aspect-ratio: 43%
     a
         @extend .stretched-link
+    .reference
+        margin-bottom: .5rem
+    &-places
+        color: $text-muted
+        display: inline-block
+        font-size: $small-font-size
+        margin-bottom: .5rem
+        @if variable-exists(icons-map)
+            &::before
+                @include icon("geo-alt")
+                font-size: 1rem
+                margin-right: .25rem
+                vertical-align: -0.15em
     .btn
         @extend .btn-link
         @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-border-radius-sm)

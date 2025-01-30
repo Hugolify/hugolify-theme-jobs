@@ -1,0 +1,9 @@
+{{- $hasPlaces := partial "func/HasTaxonomyAvailable" (dict "section" "jobs" "taxonomy" "jobs_places") -}}
+{{- $hasTags := partial "func/HasTaxonomyAvailable" (dict "section" "jobs" "taxonomy" "jobs_tags") -}}
+{{- $hasTypes := partial "func/HasTaxonomyAvailable" (dict "section" "jobs" "taxonomy" "jobs_types") -}}
+{{- if or $hasPlaces $hasTags $hasTypes }}
+  <div class="filters offcanvas" tabindex="-1" id="jobsFilters" aria-labelledby="jobsFiltersLabel">
+    {{ partial "jobs/filters/header" . }}
+    {{ partial "jobs/filters/content" . }}
+  </div>
+{{ end -}}
