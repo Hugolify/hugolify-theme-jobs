@@ -1,12 +1,9 @@
 <div class="metas">
   {{- partial "commons/reference.html" . -}}
   {{- partial "commons/date.html" . -}}
-  {{- $jobs_places := "jobs/jobs_places.html" -}}
-  {{- if templates.Exists ( printf "partials/%s" $jobs_places ) }}
-    {{ partial $jobs_places . }}
-  {{ end -}}
-  {{- $jobs_types := "jobs/jobs_types.html" -}}
-  {{- if templates.Exists ( printf "partials/%s" $jobs_types ) }}
-    {{ partial $jobs_types . }}
+  {{- partial "jobs/jobs_types.html" . -}}
+  {{- $places := "jobs/places.html" -}}
+  {{- if templates.Exists ( printf "partials/%s" $places ) }}
+    {{ partial $places . }}
   {{ end -}}
 </div>
