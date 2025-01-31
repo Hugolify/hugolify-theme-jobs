@@ -12,6 +12,11 @@
                 font-size: 1rem
                 margin-right: .25rem
                 vertical-align: -0.15em
+    .place
+        --bs-alert-border-color: #{$border-color}
+        --bs-alert-bg: #{$light}
+        --bs-alert-padding-y: 0
+        @extend .alert
     .job-form
         @include margin-top($global-spacing)
 
@@ -31,7 +36,7 @@
             .sidebar
                 grid-row: 2 / span 2
             .toc
-                grid-row: auto
+                grid-row: auto / span 2
             .job-form
                 grid-column: 1/9
                 grid-row: auto

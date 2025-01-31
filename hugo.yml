@@ -9,6 +9,7 @@ module:
     - source: layouts
       target: layouts
 
+# Params
 params:
   admin:
     collections:
