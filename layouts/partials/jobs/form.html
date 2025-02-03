@@ -1,18 +1,20 @@
 <section class="job-form">
   <h2 id="apply">{{ i18n "jobs.apply" }}</h2>
+  {{- $id := cond (isset .Params "reference") .Params.reference .Title -}}
+  {{- $item_id := dict "label" "refence" "value" $id "type" "hidden" -}}
   {{- $item_firstname := dict "label" (i18n "form.firstname") "type" "text" "autocomplet" "firstname" "required" true -}}
   {{- $item_lastname := dict "label" (i18n "form.lastname") "type" "text" "autocomplet" "lastname" "required" true -}}
   {{- $item_phone := dict "label" (i18n "form.tel") "type" "tel" "autocomplet" "lastname" "required" true -}}
   {{- $item_email := dict "label" (i18n "form.email") "type" "email" "autocomplet" "email" "required" true -}}
   {{- $item_message := dict "label" (i18n "form.message") "type" "textarea" "full" true "required" true -}}
-  {{- $items := slice $item_firstname $item_lastname $item_phone $item_email $item_message -}}
+  {{- $items := slice $item_id $item_firstname $item_lastname $item_phone $item_email $item_message -}}
   {{- $form := (dict 
     "index" .Type 
     "items" $items
     "submit" (i18n "jobs.form.submit")
     ) -}}
   {{- partial "commons/form.html" $form -}}
-  {{ if .Page.TableOfContents }}
+  {{- if .Page.TableOfContents }}
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         var toc = document.querySelector(".toc ol");
@@ -23,5 +25,5 @@
         }
       });
     </script>
-  {{ end }}
+  {{ end -}}
 </section>
