@@ -1,7 +1,7 @@
 <div class="metas">
   {{- partial "commons/reference.html" . -}}
   {{- partial "commons/date.html" . -}}
-  {{- partial "jobs/jobs_types.html" . -}}
+  {{- partial "jobs/jobs_categories.html" . -}}
   {{- $places := "jobs/places.html" -}}
   {{- if templates.Exists ( printf "partials/%s" $places ) }}
     {{ partial $places . }}
