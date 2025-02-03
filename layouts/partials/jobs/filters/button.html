@@ -1,6 +1,8 @@
+{{- $hasExpertises := partial "func/HasTaxonomyAvailable" (dict "section" "jobs" "taxonomy" "jobs_expertises") -}}
+{{- $hasPlaces := partial "func/HasTaxonomyAvailable" (dict "section" "jobs" "taxonomy" "jobs_places") -}}
 {{- $hasTags := partial "func/HasTaxonomyAvailable" (dict "section" "jobs" "taxonomy" "jobs_tags") -}}
 {{- $hasTypes := partial "func/HasTaxonomyAvailable" (dict "section" "jobs" "taxonomy" "jobs_types") -}}
-{{- if or $hasTags $hasTypes }}
+{{- if or $hasExpertises $hasPlaces $hasTags $hasTypes }}
   <button class="btn btn-filter" type="button" data-bs-toggle="offcanvas" data-bs-target="#jobsFilters" aria-controls="jobsFilters">
     {{- i18n "filter" -}}
   </button>

@@ -1,4 +1,8 @@
 <div class="content">
+  {{- $jobs_expertises := "jobs/filters/jobs_expertises.html" -}}
+  {{- if templates.Exists ( printf "partials/%s" $jobs_expertises ) }}
+    {{ partial $jobs_expertises . }}
+  {{ end -}}
   {{- $jobs_places := "jobs/filters/jobs_places.html" -}}
   {{- if templates.Exists ( printf "partials/%s" $jobs_places ) }}
     {{ partial $jobs_places . }}
