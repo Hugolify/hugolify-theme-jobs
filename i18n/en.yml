@@ -10,6 +10,10 @@ jobs:
   list_person: '{{ .Person }}’s jobs'
   more: Discover more jobs
   more_person: More jobs by {{ .Person }}
+  related:
+    available:
+      one: Other job available
+      other: Others jobs available
   title:
     one: Job
     other: Jobs

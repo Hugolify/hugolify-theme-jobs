@@ -10,6 +10,10 @@ jobs:
   list_person: Liste des offres d’emploi de {{ .Person }}
   more: Découvrir plus d’offres d’emploi
   more_person: Découvrir plus d’offres d’emploi de {{ .Person }}
+  related:
+    available:
+      one: Autre annonce disponible
+      other: Autres annonces disponibles
   title:
     one: Offre d’emploi
     other: Offres d’emploi
