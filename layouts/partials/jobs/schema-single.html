@@ -3,12 +3,67 @@
     "@context": "https://schema.org",
     "@type": "JobPosting",
     "title": {{ partial "func/PrepareData" .Title }},
+    "url": {{ .Permalink }},
+    
     {{- with .Date }}
-      "datePublished": {{ . }},
+      "datePosted": {{ . }},
     {{ end -}}
-    {{ with .Description }}
+    
+    {{- with .Params.reference }}
+      "identifier": {{ partial "func/PrepareData" . }},
+    {{ end -}}
+
+    {{- with .Description }}
       "description": {{ partial "func/PrepareData" . }},
-    {{ end }}
-    "url": {{ .Permalink }}
+    {{ end -}}
+
+    {{- with .Params.image }}
+      "image": {{ .src | absURL }},
+    {{- end -}}
+
+    {{- with .Params.jobs_categories }}
+      "employmentType": {{ partial "func/PrepareData" . }},
+    {{- end -}}
+
+    {{- with .GetTerms "jobs_statutes" }}
+      {{- range . }}
+        "occupationalCategory": {{ partial "func/PrepareData" .Title }},
+      {{ end -}}
+    {{ end -}}
+
+    {{- with .GetTerms "jobs_expertises" }}
+      {{- range . }}
+        "industry": {{ partial "func/PrepareData" .Title }},
+      {{ end -}}
+    {{ end -}}
+    
+    {{- with .GetTerms "jobs_places" }}
+      {{- $places := slice -}}
+      {{- range . }}
+        {{- $place := partial "func/GetRealPlace" . -}}
+        {{- with $place }}
+          "test": {{.Permalink}},
+          {{- with .Params.company }}
+            "hiringOrganization": {
+              "@type": "Organization",
+              "name": {{ partial "func/PrepareData" . | humanize }}
+            },
+          {{ end -}}
+          "jobLocation": {
+            "@type": "Place",
+            {{- with .Params.address }}
+              "address":{
+                "@type": "PostalAddress",
+                "addressCountry": {{ partial "func/PrepareData" .country }},
+                "addressLocality": {{ partial "func/PrepareData" .city }},
+                "postalCode": {{ partial "func/PrepareData" .zipcode }},
+                "streetAddress": {{ partial "func/PrepareData" .street }}
+              },
+            {{ end -}}
+          },
+        {{ end -}}
+      {{ end -}}
+    {{ end -}}
+
   }
 </script>
