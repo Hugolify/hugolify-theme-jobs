@@ -2,7 +2,7 @@
   {{- partial "commons/reference.html" . -}}
   {{- partial "commons/date.html" . -}}
   {{- partial "jobs/jobs_categories.html" . -}}
-  {{- $places := "jobs/places.html" -}}
+  {{- $places := "jobs/city.html" -}}
   {{- if templates.Exists ( printf "partials/%s" $places ) }}
     {{ partial $places . }}
   {{ end -}}
