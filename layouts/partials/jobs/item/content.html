@@ -1,10 +1,13 @@
 <a href="{{ .Permalink }}" itemprop="url" class="content">
   {{ partial "commons/item/reference.html" . }}
-  {{- $jobs_places := "jobs/item/city.html" -}}
-  {{- if templates.Exists ( printf "partials/%s" $jobs_places ) }}
-    {{ partial $jobs_places . }}
+  {{- $city := "jobs/item/city.html" -}}
+  {{- if templates.Exists ( printf "partials/%s" $city ) }}
+    {{ partial $city . }}
   {{ end -}}
   {{ partial "jobs/item/title.html" . }}
-  {{ partial "jobs/item/jobs_categories.html" . }}
+  {{- $jobs_categories := "jobs/item/jobs_categories.html" -}}
+  {{- if templates.Exists ( printf "partials/%s" $jobs_categories ) }}
+    {{ partial $jobs_categories . }}
+  {{ end -}}
   {{ partial "jobs/item/more.html" . }}
 </a>
