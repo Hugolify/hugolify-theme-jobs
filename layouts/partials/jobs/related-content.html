@@ -10,13 +10,13 @@
   {{- $i18n = i18n "jobs.related.available" $items -}}
 {{- end }}
 
-{{ if gt $items 0 }}
+{{- if gt $items 0 }}
   {{/*  Get 3 lastest jobs and order by newest  */}}
   {{- $items = (first 3 $items).ByDate.Reverse -}}
   <section class="related">
     <div class="container">
-      <h2>{{ $i18n }}</h2>
+      {{ partial "blocks/heading" (dict "heading" (dict "title" $i18n)) }}
       {{ partial "jobs/items" (dict "pages" $items "scrollsnap" true) }}
     </div>
   </section>
-{{ end }}
+{{ end -}}
