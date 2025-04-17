@@ -2,7 +2,7 @@
   {
     "@context": "https://schema.org",
     "@type": "JobPosting",
-    "title": {{ partial "func/PrepareData" .Title }},
+    "title": {{ partial "func/PrepareData.html" .Title }},
     "url": {{ .Permalink }},
     
     {{- with .Date }}
@@ -10,11 +10,11 @@
     {{ end -}}
     
     {{- with .Params.reference }}
-      "identifier": {{ partial "func/PrepareData" . }},
+      "identifier": {{ partial "func/PrepareData.html" . }},
     {{ end -}}
 
     {{- with .Description }}
-      "description": {{ partial "func/PrepareData" . }},
+      "description": {{ partial "func/PrepareData.html" . }},
     {{ end -}}
 
     {{- with .Params.image }}
@@ -22,18 +22,18 @@
     {{- end -}}
 
     {{- with .Params.jobs_categories }}
-      "employmentType": {{ partial "func/PrepareData" . }},
+      "employmentType": {{ partial "func/PrepareData.html" . }},
     {{- end -}}
 
     {{- with .GetTerms "jobs_statutes" }}
       {{- range . }}
-        "occupationalCategory": {{ partial "func/PrepareData" .Title }},
+        "occupationalCategory": {{ partial "func/PrepareData.html" .Title }},
       {{ end -}}
     {{ end -}}
 
     {{- with .GetTerms "jobs_expertises" }}
       {{- range . }}
-        "industry": {{ partial "func/PrepareData" .Title }},
+        "industry": {{ partial "func/PrepareData.html" .Title }},
       {{ end -}}
     {{ end -}}
     
@@ -46,7 +46,7 @@
           {{- with .Params.company }}
             "hiringOrganization": {
               "@type": "Organization",
-              "name": {{ partial "func/PrepareData" . | humanize }}
+              "name": {{ partial "func/PrepareData.html" . | humanize }}
             },
           {{ end -}}
           "jobLocation": {
@@ -54,10 +54,10 @@
             {{- with .Params.address }}
               "address":{
                 "@type": "PostalAddress",
-                "addressCountry": {{ partial "func/PrepareData" .country }},
-                "addressLocality": {{ partial "func/PrepareData" .city }},
-                "postalCode": {{ partial "func/PrepareData" .zipcode }},
-                "streetAddress": {{ partial "func/PrepareData" .street }}
+                "addressCountry": {{ partial "func/PrepareData.html" .country }},
+                "addressLocality": {{ partial "func/PrepareData.html" .city }},
+                "postalCode": {{ partial "func/PrepareData.html" .zipcode }},
+                "streetAddress": {{ partial "func/PrepareData.html" .street }}
               },
             {{ end -}}
           },

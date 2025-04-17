@@ -1,9 +1,9 @@
 {{ define "hero"}}
-  {{- partial "jobs/hero" . -}}
+  {{- partial "jobs/hero.html" . -}}
 {{ end }}
 
 {{ define "main" }}
-  {{ partial "jobs/schema" . }}
-  {{ partial "blocks/list" . }}
-  {{ partial "jobs/container" . }}
+  {{ partial "jobs/schema.html" . }}
+  {{ partial "blocks/list.html" . }}
+  {{ partial "jobs/container.html" . }}
 {{ end }}

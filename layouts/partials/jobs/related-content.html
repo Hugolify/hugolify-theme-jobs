@@ -15,7 +15,7 @@
   {{- $items = (first 3 $items).ByDate.Reverse -}}
   <section class="related">
     <div class="container">
-      {{ partial "blocks/heading" (dict "heading" (dict "title" $i18n)) }}
+      {{ partial "blocks/heading.html" (dict "heading" (dict "title" $i18n)) }}
       {{ partial "jobs/items" (dict "pages" $items "scrollsnap" true) }}
     </div>
   </section>
