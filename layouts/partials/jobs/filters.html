@@ -1,11 +1,11 @@
-{{- $hasCompanies := partial "func/HasTaxonomyAvailable" (dict "section" "jobs" "taxonomy" "jobs_companies") -}}
-{{- $hasCategories := partial "func/HasTaxonomyAvailable" (dict "section" "jobs" "taxonomy" "jobs_categories") -}}
-{{- $hasExpertises := partial "func/HasTaxonomyAvailable" (dict "section" "jobs" "taxonomy" "jobs_expertises") -}}
-{{- $hasPlaces := partial "func/HasTaxonomyAvailable" (dict "section" "jobs" "taxonomy" "jobs_places") -}}
-{{- $hasTags := partial "func/HasTaxonomyAvailable" (dict "section" "jobs" "taxonomy" "jobs_tags") -}}
+{{- $hasCompanies := partial "func/HasTaxonomyAvailable.html" (dict "section" "jobs" "taxonomy" "jobs_companies") -}}
+{{- $hasCategories := partial "func/HasTaxonomyAvailable.html" (dict "section" "jobs" "taxonomy" "jobs_categories") -}}
+{{- $hasExpertises := partial "func/HasTaxonomyAvailable.html" (dict "section" "jobs" "taxonomy" "jobs_expertises") -}}
+{{- $hasPlaces := partial "func/HasTaxonomyAvailable.html" (dict "section" "jobs" "taxonomy" "jobs_places") -}}
+{{- $hasTags := partial "func/HasTaxonomyAvailable.html" (dict "section" "jobs" "taxonomy" "jobs_tags") -}}
 {{- if or $hasCategories $hasCompanies $hasExpertises $hasPlaces $hasTags }}
   <div class="filters offcanvas" tabindex="-1" id="jobsFilters" aria-labelledby="jobsFiltersLabel">
-    {{ partial "jobs/filters/header" . }}
-    {{ partial "jobs/filters/content" . }}
+    {{ partial "jobs/filters/header.html" . }}
+    {{ partial "jobs/filters/content.html" . }}
   </div>
 {{ end -}}

@@ -1,8 +1,8 @@
-{{- $hasCategories := partial "func/HasTaxonomyAvailable" (dict "section" "jobs" "taxonomy" "jobs_categories") -}}
-{{- $hasCompanies := partial "func/HasTaxonomyAvailable" (dict "section" "jobs" "taxonomy" "jobs_companies") -}}
-{{- $hasExpertises := partial "func/HasTaxonomyAvailable" (dict "section" "jobs" "taxonomy" "jobs_expertises") -}}
-{{- $hasPlaces := partial "func/HasTaxonomyAvailable" (dict "section" "jobs" "taxonomy" "jobs_places") -}}
-{{- $hasTags := partial "func/HasTaxonomyAvailable" (dict "section" "jobs" "taxonomy" "jobs_tags") -}}
+{{- $hasCategories := partial "func/HasTaxonomyAvailable.html" (dict "section" "jobs" "taxonomy" "jobs_categories") -}}
+{{- $hasCompanies := partial "func/HasTaxonomyAvailable.html" (dict "section" "jobs" "taxonomy" "jobs_companies") -}}
+{{- $hasExpertises := partial "func/HasTaxonomyAvailable.html" (dict "section" "jobs" "taxonomy" "jobs_expertises") -}}
+{{- $hasPlaces := partial "func/HasTaxonomyAvailable.html" (dict "section" "jobs" "taxonomy" "jobs_places") -}}
+{{- $hasTags := partial "func/HasTaxonomyAvailable.html" (dict "section" "jobs" "taxonomy" "jobs_tags") -}}
 {{- if or $hasCategories $hasCompanies $hasExpertises $hasPlaces $hasTags }}
   <button class="btn btn-filter" type="button" data-bs-toggle="offcanvas" data-bs-target="#jobsFilters" aria-controls="jobsFilters">
     {{- i18n "filter" -}}
