@@ -19,7 +19,12 @@ params:
           - field: isIndex
             value: false
         icon:
-          sveltiacms: work
+          bootstrap_icons: briefcase
+          iconoir: suitcase
+          material_icons: work
+          material_symbols: work
+          lucide: briefcase-business
+          sveltiacms: work # legacy
         sortable: '[date, title]'
   jobs:
     thumbnail:
