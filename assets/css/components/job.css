@@ -1,0 +1,7 @@
+/* components/job.css */
+/*
+ * .job remaps the full --item-* API (and the inner --btn-*) onto its
+ * --job-* tokens, so any value can be tuned from job.json without
+ * touching this file.
+ * Usage: <article class="item job">
+ */

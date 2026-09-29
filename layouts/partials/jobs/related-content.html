@@ -1,22 +1,19 @@
 {{/*  Get Jobs  */}}
 {{- $items := where site.RegularPages "Section" "jobs" -}}
 {{/*  Exclude the current page  */}}
-{{- $currentDatePage := .Date -}}
-{{- $items = where $items "Date" "ne" $currentDatePage -}}
-{{- $i18n := i18n "jobs.related.available" $items -}}
-{{/*  In same category  */}}
+{{- $items = where $items "Date" "ne" .Date -}}
+{{/*  In same expertises  */}}
 {{- if isset .Params "jobs_expertises" -}}
   {{- $items = where $items "Params.jobs_expertises" "intersect" .Params.jobs_expertises -}}
-  {{- $i18n = i18n "jobs.related.available" $items -}}
 {{- end }}
 
-{{- if gt $items 0 }}
+{{ if gt $items 0 }}
   {{/*  Get 3 lastest jobs and order by newest  */}}
   {{- $items = (first 3 $items).ByDate.Reverse -}}
-  <section class="related">
-    <div class="container">
-      {{ partial "blocks/heading.html" (dict "heading" (dict "title" $i18n)) }}
-      {{ partial "jobs/items.html" (dict "pages" $items "scrollsnap" true) }}
-    </div>
-  </section>
-{{ end -}}
+  {{- $title := i18n "jobs.related.available" $items }}
+  {{- partial "commons/related.html" (dict
+    "section" "jobs"
+    "pages" $items
+    "title" $title
+  ) -}}
+{{ end }}

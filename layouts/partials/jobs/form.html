@@ -16,8 +16,11 @@
   {{- partial "commons/form.html" $form -}}
   {{- if .Page.TableOfContents }}
     <script>
+      {{/*  The form sits outside the content, so its heading is missing from the
+            generated toc: append it to the root list. Hugo emits <ol> with
+            markup.tableOfContents.ordered, <ul> otherwise.  */}}
       document.addEventListener("DOMContentLoaded", function () {
-        var toc = document.querySelector(".toc ol");
+        var toc = document.querySelector("#TableOfContents > ol, #TableOfContents > ul");
         if (toc) {
           var newItem = document.createElement("li");
           newItem.innerHTML = '<a href="#apply">{{ i18n "jobs.apply" }}</a>';

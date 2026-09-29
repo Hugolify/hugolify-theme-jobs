@@ -1,0 +1,16 @@
+{
+  "jobs": {
+    "minWidth": {
+      "$value": "{maxWidth.item}",
+      "$type": "dimension"
+    },
+    "nav": {
+      "margin": {
+        "blockStart": {
+          "$type": "dimension",
+          "$value": "{spacing.fluid.md}"
+        }
+      }
+    }
+  }
+}

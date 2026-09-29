@@ -1,2 +1,3 @@
-module github.com/hugolify/hugolify-theme-jobs
+module github.com/hugolify/hugolify-theme-jobs/v2
+
 go 1.21
