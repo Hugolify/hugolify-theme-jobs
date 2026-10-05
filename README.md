@@ -6,7 +6,8 @@ Edit `config/_default/module.yaml` to install the `hugolify-theme-jobs` module:
 
 ```yml
 imports:
-  - path: github.com/hugolify/hugolify-theme-jobs
+  - path: github.com/hugolify/hugolify-theme-jobs/v2
+  - path: github.com/hugolify/hugolify-theme/v2 # required
 ```
 
 ## Documentation

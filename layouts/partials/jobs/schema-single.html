@@ -1,69 +1,84 @@
+{{- /* Schema.org JobPosting.
+
+  Built as a dict and serialised with jsonify, so an absent field simply never
+  reaches the output — a hand-written literal leaves dangling commas behind and
+  the JSON stops parsing. Taxonomy fields are plural by nature, hence the slices.
+
+  A taxonomy is only read once the site declares it: .GetTerms raises on one
+  that was never configured, and every jobs_* taxonomy ships as its own module. */ -}}
+
+{{- $taxonomies := site.Taxonomies -}}
+{{- $terms := dict -}}
+{{- range slice "jobs_categories" "jobs_expertises" "jobs_places" "jobs_statutes" -}}
+  {{- if isset $taxonomies . -}}
+    {{- $terms = merge $terms (dict . ($.GetTerms .)) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $posting := dict
+  "@context" "https://schema.org"
+  "@type" "JobPosting"
+  "@id" (printf "%s#jobposting" .Permalink)
+  "title" (partial "func/PrepareData.html" .Title)
+  "url" .Permalink
+-}}
+
+{{- with .Date -}}{{- $posting = merge $posting (dict "datePosted" (.Format "2006-01-02")) -}}{{- end -}}
+{{- with .Params.reference -}}{{- $posting = merge $posting (dict "identifier" (partial "func/PrepareData.html" .)) -}}{{- end -}}
+{{- with .Description -}}{{- $posting = merge $posting (dict "description" (partial "func/PrepareData.html" .)) -}}{{- end -}}
+{{- with .Params.image -}}{{- with .src -}}{{- $posting = merge $posting (dict "image" (. | absURL)) -}}{{- end -}}{{- end -}}
+
+{{- /* employmentType — the job category, e.g. permanent, internship. */ -}}
+{{- with index $terms "jobs_categories" -}}
+  {{- $values := slice -}}
+  {{- range . -}}{{- $values = $values | append (partial "func/PrepareData.html" .Title) -}}{{- end -}}
+  {{- with $values -}}{{- $posting = merge $posting (dict "employmentType" .) -}}{{- end -}}
+{{- end -}}
+
+{{- /* industry — the expertise the job belongs to. */ -}}
+{{- with index $terms "jobs_expertises" -}}
+  {{- $values := slice -}}
+  {{- range . -}}
+    {{- $expertise := partial "func/GetRealExpertise.html" . -}}
+    {{- $values = $values | append (partial "func/PrepareData.html" $expertise.Title) -}}
+  {{- end -}}
+  {{- with $values -}}{{- $posting = merge $posting (dict "industry" .) -}}{{- end -}}
+{{- end -}}
+
+{{- /* occupationalCategory — an optional statute taxonomy, when the site declares one. */ -}}
+{{- with index $terms "jobs_statutes" -}}
+  {{- $values := slice -}}
+  {{- range . -}}{{- $values = $values | append (partial "func/PrepareData.html" .Title) -}}{{- end -}}
+  {{- with $values -}}{{- $posting = merge $posting (dict "occupationalCategory" .) -}}{{- end -}}
+{{- end -}}
+
+{{- /* hiringOrganization and jobLocation — resolved from the real place page, so
+       the address comes from the places section rather than the term stub. */ -}}
+{{- with index $terms "jobs_places" -}}
+  {{- $locations := slice -}}
+  {{- range . -}}
+    {{- with partial "func/GetRealPlace.html" . -}}
+      {{- with .Params.company -}}
+        {{- $posting = merge $posting (dict "hiringOrganization" (dict
+          "@type" "Organization"
+          "name" (partial "func/PrepareData.html" . | humanize)
+        )) -}}
+      {{- end -}}
+      {{- $location := dict "@type" "Place" -}}
+      {{- with .Params.address -}}
+        {{- $address := dict "@type" "PostalAddress" -}}
+        {{- with .country -}}{{- $address = merge $address (dict "addressCountry" (partial "func/PrepareData.html" .)) -}}{{- end -}}
+        {{- with .city -}}{{- $address = merge $address (dict "addressLocality" (partial "func/PrepareData.html" .)) -}}{{- end -}}
+        {{- with .zipcode -}}{{- $address = merge $address (dict "postalCode" (partial "func/PrepareData.html" .)) -}}{{- end -}}
+        {{- with .street -}}{{- $address = merge $address (dict "streetAddress" (partial "func/PrepareData.html" .)) -}}{{- end -}}
+        {{- $location = merge $location (dict "address" $address) -}}
+      {{- end -}}
+      {{- $locations = $locations | append $location -}}
+    {{- end -}}
+  {{- end -}}
+  {{- with $locations -}}{{- $posting = merge $posting (dict "jobLocation" .) -}}{{- end -}}
+{{- end -}}
+
 <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "JobPosting",
-    "title": {{ partial "func/PrepareData.html" .Title }},
-    "url": {{ .Permalink }},
-    
-    {{- with .Date }}
-      "datePosted": {{ . }},
-    {{ end -}}
-    
-    {{- with .Params.reference }}
-      "identifier": {{ partial "func/PrepareData.html" . }},
-    {{ end -}}
-
-    {{- with .Description }}
-      "description": {{ partial "func/PrepareData.html" . }},
-    {{ end -}}
-
-    {{- with .Params.image }}
-      "image": {{ .src | absURL }},
-    {{- end -}}
-
-    {{- with .Params.jobs_categories }}
-      "employmentType": {{ partial "func/PrepareData.html" . }},
-    {{- end -}}
-
-    {{- with .GetTerms "jobs_statutes" }}
-      {{- range . }}
-        "occupationalCategory": {{ partial "func/PrepareData.html" .Title }},
-      {{ end -}}
-    {{ end -}}
-
-    {{- with .GetTerms "jobs_expertises" }}
-      {{- range . }}
-        "industry": {{ partial "func/PrepareData.html" .Title }},
-      {{ end -}}
-    {{ end -}}
-    
-    {{- with .GetTerms "jobs_places" }}
-      {{- $places := slice -}}
-      {{- range . }}
-        {{- $place := partial "func/GetRealPlace" . -}}
-        {{- with $place }}
-          "test": {{.Permalink}},
-          {{- with .Params.company }}
-            "hiringOrganization": {
-              "@type": "Organization",
-              "name": {{ partial "func/PrepareData.html" . | humanize }}
-            },
-          {{ end -}}
-          "jobLocation": {
-            "@type": "Place",
-            {{- with .Params.address }}
-              "address":{
-                "@type": "PostalAddress",
-                "addressCountry": {{ partial "func/PrepareData.html" .country }},
-                "addressLocality": {{ partial "func/PrepareData.html" .city }},
-                "postalCode": {{ partial "func/PrepareData.html" .zipcode }},
-                "streetAddress": {{ partial "func/PrepareData.html" .street }}
-              },
-            {{ end -}}
-          },
-        {{ end -}}
-      {{ end -}}
-    {{ end -}}
-
-  }
+{{ $posting | jsonify (dict "indent" "  ") | safeJS }}
 </script>

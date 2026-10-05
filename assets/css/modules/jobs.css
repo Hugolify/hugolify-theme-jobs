@@ -1,0 +1,18 @@
+/* css/modules/jobs.css — hugolify-theme-jobs entry point */
+
+/* Tokens */
+@import '../tokens/jobs.css';
+
+/* Components */
+@import '../components/job.css';
+@import '../components/jobs.css';
+
+/* Pages */
+@import '../pages/job.css';
+@import '../pages/jobs.css';
+
+/* Modules / Taxonomies */
+@import 'jobs-categories.css';
+@import 'jobs-expertises.css';
+@import 'jobs-places.css';
+@import 'jobs-tags.css';

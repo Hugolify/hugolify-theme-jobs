@@ -1,0 +1,9 @@
+/* Do not edit directly, this file was auto-generated. */
+
+/* jobs.css */
+@layer tokens {
+  :root {
+    --jobs-min-width: var(--max-width-item);
+    --jobs-nav-margin-block-start: var(--spacing-fluid-md);
+  }
+}

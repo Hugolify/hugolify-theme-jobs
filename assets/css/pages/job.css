@@ -1,0 +1,19 @@
+/* pages/job.css */
+/*
+ * A job single page adds two children to the shared .grid: the metas row above
+ * the body and the application form below it. Both belong to the reading
+ * column, so they take the same span as .content (layouts/grid.css) and let
+ * auto-placement stack .sidebar and .toc beside them.
+ */
+@layer pages {
+  .page-jobs {
+    @media (--tablet-wide) {
+      .grid {
+        .metas,
+        .job-form {
+          --grid-column: span 8;
+        }
+      }
+    }
+  }
+}

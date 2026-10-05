@@ -1,0 +1,12 @@
+/* components/jobs.css */
+/*
+ * .jobs remaps the full --items-* API onto its --jobs-* tokens, so any
+ * value can be tuned from jobs.json without touching this file.
+ * Usage: <article class="items jobs">
+ */
+@layer components {
+  .jobs {
+    --items-min-width: var(--jobs-min-width);
+    --items-nav-margin-block-start: var(--jobs-nav-margin-block-start);
+  }
+}

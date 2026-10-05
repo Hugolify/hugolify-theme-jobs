@@ -4,6 +4,8 @@ module:
       target: archetypes
     - source: assets
       target: assets
+    - source: content
+      target: content
     - source: i18n
       target: i18n
     - source: layouts
@@ -11,6 +13,8 @@ module:
 
 # Params
 params:
+
+  # Hugolify admin
   admin:
     collections:
       jobs:
@@ -24,21 +28,22 @@ params:
           material_icons: work
           material_symbols: work
           lucide: briefcase-business
-          sveltiacms: work # legacy
+        path: "{{year}}/{{slug}}"
         sortable: '[date, title]'
+
+  # Image
   jobs:
     thumbnail:
-      desktop: '414x177'
+      desktop: '416x179'
+      desktop_large: '636x273'
       mobile: '300x129'
       scrollsnap: '240x103'
-    medium:
-      desktop: '636x445'
-      mobile: '300x210'
-      scrollsnap: '240x168'
+      sizes: 100vw, 50vw, 33vw
     image:
-      desktop: '300x'
+      desktop: '420x'
+      sizes: 100vw, 50vw, 33vw
 
-# Default
+# Permalinks
 permalinks:
   page:
     jobs: /jobs/:slug/

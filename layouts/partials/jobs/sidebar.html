@@ -3,7 +3,7 @@
   {{- if templates.Exists ( printf "partials/%s" $jobs_places ) }}
     {{ partial $jobs_places . }}
   {{ end -}}
-  {{ partial "commons/key-features" . }}
+  {{ partial "commons/key-features.html" . }}
   {{- $jobs_tags := "jobs/jobs_tags.html" -}}
   {{- if templates.Exists ( printf "partials/%s" $jobs_tags ) }}
     {{ partial $jobs_tags . }}
