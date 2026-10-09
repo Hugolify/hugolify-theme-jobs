@@ -1,84 +1,129 @@
-{{- /* Schema.org JobPosting.
+{{- /* Schema.org for a job offer: a JobPosting, with what Google for Jobs reads.
 
-  Built as a dict and serialised with jsonify, so an absent field simply never
-  reaches the output — a hand-written literal leaves dangling commas behind and
-  the JSON stops parsing. Taxonomy fields are plural by nature, hence the slices.
+  Every jobs_* taxonomy ships as its own module, and func/GetSchemaTerms.html
+  only reads the ones the site declares:
 
-  A taxonomy is only read once the site declares it: .GetTerms raises on one
-  that was never configured, and every jobs_* taxonomy ships as its own module. */ -}}
+    jobs_categories → employmentType, mapped onto the values Google knows
+                      (FULL_TIME, INTERN…) when the category says which; its
+                      own name otherwise, which schema.org still accepts
+    jobs_expertises → industry
+    jobs_statutes   → occupationalCategory
+    jobs_places     → jobLocation, from the place pages; hiringOrganization
+                      too when one of them is an office of the firm
 
-{{- $taxonomies := site.Taxonomies -}}
-{{- $terms := dict -}}
-{{- range slice "jobs_categories" "jobs_expertises" "jobs_places" "jobs_statutes" -}}
-  {{- if isset $taxonomies . -}}
-    {{- $terms = merge $terms (dict . ($.GetTerms .)) -}}
-  {{- end -}}
-{{- end -}}
+  Without a place, the job is located at the head office, and Google requires a
+  location. Without an office, the organization behind the site hires. */ -}}
+{{- $organization := partial "func/GetSchemaOrganization.html" -}}
 
 {{- $posting := dict
-  "@context" "https://schema.org"
   "@type" "JobPosting"
   "@id" (printf "%s#jobposting" .Permalink)
   "title" (partial "func/PrepareData.html" .Title)
   "url" .Permalink
 -}}
 
-{{- with .Date -}}{{- $posting = merge $posting (dict "datePosted" (.Format "2006-01-02")) -}}{{- end -}}
-{{- with .Params.reference -}}{{- $posting = merge $posting (dict "identifier" (partial "func/PrepareData.html" .)) -}}{{- end -}}
-{{- with .Description -}}{{- $posting = merge $posting (dict "description" (partial "func/PrepareData.html" .)) -}}{{- end -}}
-{{- with .Params.image -}}{{- with .src -}}{{- $posting = merge $posting (dict "image" (. | absURL)) -}}{{- end -}}{{- end -}}
-
-{{- /* employmentType — the job category, e.g. permanent, internship. */ -}}
-{{- with index $terms "jobs_categories" -}}
-  {{- $values := slice -}}
-  {{- range . -}}{{- $values = $values | append (partial "func/PrepareData.html" .Title) -}}{{- end -}}
-  {{- with $values -}}{{- $posting = merge $posting (dict "employmentType" .) -}}{{- end -}}
+{{- with partial "func/GetSchemaDate.html" .Date -}}
+  {{- $posting = merge $posting (dict "datePosted" .) -}}
+{{- end -}}
+{{- with partial "func/GetSchemaDate.html" .ExpiryDate -}}
+  {{- $posting = merge $posting (dict "validThrough" .) -}}
 {{- end -}}
 
-{{- /* industry — the expertise the job belongs to. */ -}}
-{{- with index $terms "jobs_expertises" -}}
-  {{- $values := slice -}}
-  {{- range . -}}
-    {{- $expertise := partial "func/GetRealExpertise.html" . -}}
-    {{- $values = $values | append (partial "func/PrepareData.html" $expertise.Title) -}}
+{{- /* Google asks for the full description, in HTML: the body when there is
+       one, the summary otherwise. */ -}}
+{{- with chomp .Content -}}
+  {{- $posting = merge $posting (dict "description" (string .)) -}}
+{{- else -}}
+  {{- with .Description -}}
+    {{- $posting = merge $posting (dict "description" (partial "func/PrepareData.html" .)) -}}
   {{- end -}}
-  {{- with $values -}}{{- $posting = merge $posting (dict "industry" .) -}}{{- end -}}
 {{- end -}}
 
-{{- /* occupationalCategory — an optional statute taxonomy, when the site declares one. */ -}}
-{{- with index $terms "jobs_statutes" -}}
-  {{- $values := slice -}}
-  {{- range . -}}{{- $values = $values | append (partial "func/PrepareData.html" .Title) -}}{{- end -}}
-  {{- with $values -}}{{- $posting = merge $posting (dict "occupationalCategory" .) -}}{{- end -}}
+{{- with .Params.reference -}}
+  {{- $posting = merge $posting (dict "identifier" (dict
+    "@type" "PropertyValue"
+    "name" (index $organization "name")
+    "value" (partial "func/PrepareData.html" .)
+  )) -}}
 {{- end -}}
 
-{{- /* hiringOrganization and jobLocation — resolved from the real place page, so
-       the address comes from the places section rather than the term stub. */ -}}
-{{- with index $terms "jobs_places" -}}
-  {{- $locations := slice -}}
-  {{- range . -}}
-    {{- with partial "func/GetRealPlace.html" . -}}
-      {{- with .Params.company -}}
-        {{- $posting = merge $posting (dict "hiringOrganization" (dict
-          "@type" "Organization"
-          "name" (partial "func/PrepareData.html" . | humanize)
-        )) -}}
+{{- with partial "func/GetSchemaImage.html" .Params.image -}}
+  {{- $posting = merge $posting (dict "image" .) -}}
+{{- end -}}
+
+{{- /* employmentType: the words a category is made of, matched on whole words
+       so "intern" is not read in "international". */ -}}
+{{- $employmentTypes := dict
+  "FULL_TIME" (slice "cdi" "full-time" "fulltime" "permanent" "temps-plein" "temps-complet" "vollzeit" "unbefristet" "tiempo-completo" "indefinido")
+  "PART_TIME" (slice "part-time" "parttime" "temps-partiel" "teilzeit" "tiempo-parcial")
+  "TEMPORARY" (slice "cdd" "temporary" "fixed-term" "interim" "befristet" "temporal")
+  "INTERN" (slice "stage" "internship" "intern" "stagiaire" "praktikum" "practicas")
+  "CONTRACTOR" (slice "freelance" "contractor" "independant" "freiberuflich" "autonomo")
+  "VOLUNTEER" (slice "volunteer" "benevolat" "benevole" "ehrenamt" "voluntariado")
+-}}
+{{- $employment := slice -}}
+{{- range partial "func/GetSchemaTerms.html" (dict "page" . "taxonomy" "jobs_categories") -}}
+  {{- $words := printf "-%s-" (anchorize .) -}}
+  {{- $value := . -}}
+  {{- range $type, $keys := $employmentTypes -}}
+    {{- range $keys -}}
+      {{- if strings.Contains $words (printf "-%s-" .) -}}
+        {{- $value = $type -}}
       {{- end -}}
-      {{- $location := dict "@type" "Place" -}}
-      {{- with .Params.address -}}
-        {{- $address := dict "@type" "PostalAddress" -}}
-        {{- with .country -}}{{- $address = merge $address (dict "addressCountry" (partial "func/PrepareData.html" .)) -}}{{- end -}}
-        {{- with .city -}}{{- $address = merge $address (dict "addressLocality" (partial "func/PrepareData.html" .)) -}}{{- end -}}
-        {{- with .zipcode -}}{{- $address = merge $address (dict "postalCode" (partial "func/PrepareData.html" .)) -}}{{- end -}}
-        {{- with .street -}}{{- $address = merge $address (dict "streetAddress" (partial "func/PrepareData.html" .)) -}}{{- end -}}
-        {{- $location = merge $location (dict "address" $address) -}}
-      {{- end -}}
-      {{- $locations = $locations | append $location -}}
     {{- end -}}
   {{- end -}}
-  {{- with $locations -}}{{- $posting = merge $posting (dict "jobLocation" .) -}}{{- end -}}
+  {{- if not (in $employment $value) -}}
+    {{- $employment = $employment | append $value -}}
+  {{- end -}}
+{{- end -}}
+{{- with $employment -}}
+  {{- $posting = merge $posting (dict "employmentType" .) -}}
 {{- end -}}
 
-<script type="application/ld+json">
-{{ $posting | jsonify (dict "indent" "  ") | safeJS }}
-</script>
+{{- with partial "func/GetSchemaTerms.html" (dict "page" . "taxonomy" "jobs_expertises") -}}
+  {{- $posting = merge $posting (dict "industry" .) -}}
+{{- end -}}
+{{- with partial "func/GetSchemaTerms.html" (dict "page" . "taxonomy" "jobs_statutes") -}}
+  {{- $posting = merge $posting (dict "occupationalCategory" .) -}}
+{{- end -}}
+
+{{- /* jobLocation and hiringOrganization, from the place pages. A place
+       standing for a company of its own (a legacy `company` key) hires on its
+       own name. */ -}}
+{{- $organizationTypes := (partial "func/GetSchemaTypes.html").organization -}}
+{{- $hiring := false -}}
+{{- $locations := slice -}}
+{{- range partial "func/GetSchemaTerms.html" (dict "page" . "taxonomy" "jobs_places" "format" "page") -}}
+  {{- if and (not (reflect.IsMap .)) (eq .Section "places") -}}
+    {{- $locations = $locations | append (partial "func/GetSchemaPlace.html" .) -}}
+    {{- if not $hiring -}}
+      {{- with .Params.company -}}
+        {{- $hiring = dict "@type" "Organization" "name" (partial "func/PrepareData.html" .) -}}
+      {{- else -}}
+        {{- $entity := partial "func/GetSchemaEntity.html" (dict "page" . "compact" true) -}}
+        {{- if in $organizationTypes (index $entity "@type") -}}
+          {{- $hiring = $entity -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- else -}}
+    {{- /* A bare term still names the city. */ -}}
+    {{- $locations = $locations | append (partial "func/GetSchemaPlace.html" .) -}}
+  {{- end -}}
+{{- end -}}
+{{- if not $locations -}}
+  {{- with $organization.address -}}
+    {{- $locations = slice (dict "@type" "Place" "address" .) -}}
+  {{- end -}}
+{{- end -}}
+{{- with $locations -}}
+  {{- $posting = merge $posting (dict "jobLocation" .) -}}
+{{- end -}}
+{{- $posting = merge $posting (dict "hiringOrganization" (or $hiring (partial "func/GetSchemaOrganization.html" (dict "compact" true)))) -}}
+
+{{- $webpage := partial "func/GetSchemaWebPage.html" (dict
+  "page" .
+  "mainEntity" (dict "@id" (index $posting "@id"))
+) -}}
+
+{{- partial "commons/jsonld.html" (slice $webpage $posting) -}}
