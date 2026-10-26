@@ -5,14 +5,16 @@
 
     jobs_categories → employmentType, mapped onto the values Google knows
                       (FULL_TIME, INTERN…) when the category says which; its
-                      own name otherwise, which schema.org still accepts
+                      own name otherwise, which schema.org still accepts.
+                      Without the taxonomy, the key features say it.
     jobs_expertises → industry
     jobs_statutes   → occupationalCategory
     jobs_places     → jobLocation, from the place pages; hiringOrganization
                       too when one of them is an office of the firm
 
   Without a place, the job is located at the head office, and Google requires a
-  location. Without an office, the organization behind the site hires. */ -}}
+  location. Without an office, the organization behind the site hires. The
+  expiry date of the offer (expiryDate) tells Google when it ends. */ -}}
 {{- $organization := partial "func/GetSchemaOrganization.html" -}}
 
 {{- $posting := dict
@@ -76,6 +78,21 @@
     {{- $employment = $employment | append $value -}}
   {{- end -}}
 {{- end -}}
+{{- /* Without a category, the key features of the offer say it as often:
+       "Contract: Internship · Full time" reads INTERN and FULL_TIME. Only the
+       values Google knows are kept, a feature naming none says nothing. */ -}}
+{{- if not $employment -}}
+  {{- range .Params.keyfeatures -}}
+    {{- $words := printf "-%s-" (anchorize (printf "%s %s" (.title | default "") (.text | default ""))) -}}
+    {{- range $type, $keys := $employmentTypes -}}
+      {{- range $keys -}}
+        {{- if and (strings.Contains $words (printf "-%s-" .)) (not (in $employment $type)) -}}
+          {{- $employment = $employment | append $type -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
 {{- with $employment -}}
   {{- $posting = merge $posting (dict "employmentType" .) -}}
 {{- end -}}
@@ -112,8 +129,12 @@
   {{- end -}}
 {{- end -}}
 {{- if not $locations -}}
+  {{- /* An organization present in several places lists the head office
+         address first. */ -}}
   {{- with $organization.address -}}
-    {{- $locations = slice (dict "@type" "Place" "address" .) -}}
+    {{- $address := . -}}
+    {{- if reflect.IsSlice . -}}{{- $address = index . 0 -}}{{- end -}}
+    {{- $locations = slice (dict "@type" "Place" "address" $address) -}}
   {{- end -}}
 {{- end -}}
 {{- with $locations -}}
