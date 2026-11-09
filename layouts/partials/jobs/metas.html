@@ -2,11 +2,11 @@
   {{- partial "commons/reference.html" . -}}
   {{- partial "commons/date.html" . -}}
   {{- $jobs_categories := "jobs/jobs_categories.html" -}}
-  {{- if templates.Exists ( printf "partials/%s" $jobs_categories ) }}
+  {{- if templates.Exists ( printf "_partials/%s" $jobs_categories ) }}
     {{ partial $jobs_categories . }}
   {{ end -}}
   {{- $city := "jobs/city.html" -}}
-  {{- if templates.Exists ( printf "partials/%s" $city ) }}
+  {{- if templates.Exists ( printf "_partials/%s" $city ) }}
     {{ partial $city . }}
   {{ end -}}
 </div>
