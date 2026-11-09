@@ -18,7 +18,9 @@
     {{ end -}}
 
     {{- with .Params.image }}
-      "image": {{ .src | absURL }},
+      {{- $schemaImage := .src | absURL -}}
+      {{- if templates.Exists "partials/func/GetSchemaImageSrc.html" }}{{ $schemaImage = partial "func/GetSchemaImageSrc.html" .src }}{{ end }}
+      "image": {{ $schemaImage }},
     {{- end -}}
 
     {{- with .Params.jobs_categories }}
