@@ -24,6 +24,7 @@ params:
             value: false
         icon:
           bootstrap_icons: briefcase
+          hugeicons: Briefcase01
           iconoir: suitcase
           material_icons: work
           material_symbols: work
